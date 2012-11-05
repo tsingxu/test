@@ -1,0 +1,7 @@
+12-11-05 12:34:15.534|INFO |com.tsingxu.pitaya.Hello.main(Hello.java:25)| 
+---------------------------------------------------------------------
+                          Hello pitaya
+    intro: a framework that aims to provide a high-performance
+           & high-scalability web server, it's a trial.
+    author:xuhuiqing (tsingxu)
+---------------------------------------------------------------------
