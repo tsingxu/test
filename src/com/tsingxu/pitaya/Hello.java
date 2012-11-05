@@ -1,6 +1,12 @@
 package com.tsingxu.pitaya;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 import org.apache.log4j.Logger;
+
+import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 /**
  * <b>in_a_word_briefly</b>
@@ -18,16 +24,24 @@ public class Hello
 
 	/**
 	 * @param args
+	 * @throws IOException 
 	 */
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
-		String ls = System.getProperty("line.separator");
-		logger.info(ls + "---------------------------------------------------------------------"
-				+ ls + "                          Hello pitaya" + ls
-				+ "    intro: a framework that aims to provide a high-performance" + ls
-				+ "           & high-scalability web server, it's a trial." + ls
-				+ "    author:xuhuiqing (tsingxu)" + ls
-				+ "---------------------------------------------------------------------");
-	}
+		FileInputStream fis = new FileInputStream(new File("input"));
 
+		ByteArrayBuffer bab = new ByteArrayBuffer();
+		byte[] buff = new byte[1024];
+		int cnt;
+
+		while ((cnt = fis.read(buff)) != -1)
+		{
+			bab.write(buff, 0, cnt);
+		}
+		bab.flush();
+		logger.info(bab.toString());
+
+		bab.close();
+		fis.close();
+	}
 }
