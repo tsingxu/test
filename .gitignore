@@ -1,9 +1,4 @@
 *.class
 .classpath
 .project
-input
-*.pptx
-# Package Files #
-#*.jar
-#*.war
-#*.ear
+logs

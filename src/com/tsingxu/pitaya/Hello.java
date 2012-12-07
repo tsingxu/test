@@ -28,8 +28,7 @@ public class Hello
 	 */
 	public static void main(String[] args) throws IOException
 	{
-		FileInputStream fis = new FileInputStream(new File("input"));
-
+		FileInputStream fis = new FileInputStream(new File("file/a.in"));
 		ByteArrayBuffer bab = new ByteArrayBuffer();
 		byte[] buff = new byte[1024];
 		int cnt;
@@ -39,8 +38,7 @@ public class Hello
 			bab.write(buff, 0, cnt);
 		}
 		bab.flush();
-		logger.info(bab.toString());
-
+		System.out.println(bab.toString());
 		bab.close();
 		fis.close();
 	}
