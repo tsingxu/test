@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<transactionManager type="JDBC" commitRequired="true">
+		<dataSource type="SIMPLE">
+			<property name="JDBC.Driver" value="com.mysql.jdbc.Driver" />
+			<property name="ConnectType" value="0" />
+			<property name="JDBC.ConnectionURL" value="jdbc:mysql://192.168.8.220:3306/xhq?setUnicode=true&amp;characterEncoding=UTF-8" />
+			<property name="JDBC.Username" value="root" />
+			<property name="JDBC.Password" value="123456" />
+			<property name="JDBC.DefaultAutoCommit" value="false" />
+			<property name="Pool.MaximumActiveConnections" value="75" />
+			<property name="Pool.MaximumIdleConnections" value="15" />
+			<property name="Pool.MaximumCheckoutTime" value="10000" />
+			<property name="Pool.TimeToWait" value="5000" />
+			<property name="Pool.PingQuery" value="select 1 from dual" />
+			<property name="Pool.PingEnabled" value="false" />
+			<property name="Pool.PingIntervalTime" value="300000" />
+			<property name="Pool.PingConnectionsOlderThan" value="1" />
+			<property name="Pool.PingConnectionsNotUsedFor" value="1" />
+		</dataSource>
+	</transactionManager>
+	<sqlMap resource="table/emptySql.xml" />
+</sqlMapConfig>
