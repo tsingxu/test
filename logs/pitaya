@@ -1,1 +1,4 @@
-12-12-07 14:54:18.982|INFO |com.tsingxu.pitaya.Hello.main(Hello.java:41)| pitaya
+12-12-07 15:31:41.311|INFO |org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)| Loading XML bean definitions from file [E:\git\test\src\com\tsingxu\spring\hello.xml]
+12-12-07 15:32:22.712|INFO |org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)| Loading XML bean definitions from file [E:\git\test\src\com\tsingxu\spring\hello.xml]
+12-12-07 15:33:20.519|INFO |org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)| Loading XML bean definitions from file [E:\git\test\src\com\tsingxu\spring\hello.xml]
+12-12-07 15:33:35.588|INFO |org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:315)| Loading XML bean definitions from file [E:\git\test\src\com\tsingxu\spring\hello.xml]

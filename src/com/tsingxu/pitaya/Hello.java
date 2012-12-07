@@ -38,7 +38,7 @@ public class Hello
 			bab.write(buff, 0, cnt);
 		}
 		bab.flush();
-		System.out.println(bab.toString());
+		logger.info(bab.toString());
 		bab.close();
 		fis.close();
 	}

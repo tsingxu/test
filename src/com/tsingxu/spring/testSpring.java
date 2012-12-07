@@ -14,6 +14,7 @@ import org.springframework.core.io.FileSystemResource;
  * @since 2012-10-15 上午10:10:22
  * @author x00199331
  */
+@SuppressWarnings("deprecation")
 public class testSpring
 {
 	private String msg;
@@ -21,13 +22,11 @@ public class testSpring
 	/**
 	 * @param args
 	 */
-	@SuppressWarnings("deprecation")
 	public static void main(String[] args)
 	{
 		BeanFactory bf = new XmlBeanFactory(new FileSystemResource(
 				"src/com/tsingxu/spring/hello.xml"));
-		testSpring t = (testSpring) bf.getBean("helloService");
-		System.out.println(t);
+		System.out.println(((testSpring) bf.getBean("helloService")).toString());
 	}
 
 	public String getMsg()
@@ -37,7 +36,6 @@ public class testSpring
 
 	public void setMsg(String msg)
 	{
-		System.out.println(msg);
 		this.msg = msg;
 	}
 
