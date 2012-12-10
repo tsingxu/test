@@ -11,6 +11,16 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 
+/**
+ * <b>in_a_word_briefly</b>
+ * 
+ * <ol>
+ * <li>...</li>
+ * </ol>
+ * 
+ * @since Dec 10, 2012 10:24:28 AM
+ * @author xuhuiqing
+ */
 public class Server
 {
 	public static void main(String[] args)

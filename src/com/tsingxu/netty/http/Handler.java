@@ -70,7 +70,6 @@ public class Handler extends SimpleChannelUpstreamHandler
 		response.setContent(ChannelBuffers.copiedBuffer("Failure: " + status.toString() + "\r\n",
 				CharsetUtil.UTF_8));
 
-		// Close the connection as soon as the error message is sent.
 		ctx.getChannel().write(response).addListener(ChannelFutureListener.CLOSE);
 	}
 }
