@@ -25,7 +25,7 @@ public class testSpring
 	public static void main(String[] args)
 	{
 		BeanFactory bf = new XmlBeanFactory(new FileSystemResource(
-				"src/com/tsingxu/spring/hello.xml"));
+				"src/main/java/com/tsingxu/spring/hello.xml"));
 		System.out.println(((testSpring) bf.getBean("helloService")).toString());
 	}
 
