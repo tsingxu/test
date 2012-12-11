@@ -1,12 +1,10 @@
 package com.tsingxu.pitaya;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-
 import org.apache.log4j.Logger;
-
-import com.sun.xml.internal.ws.util.ByteArrayBuffer;
 
 /**
  * <b>in_a_word_briefly</b>
@@ -29,17 +27,20 @@ public class Hello
 	public static void main(String[] args) throws IOException
 	{
 		FileInputStream fis = new FileInputStream(new File("file/a.in"));
-		ByteArrayBuffer bab = new ByteArrayBuffer();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		baos.reset();
+
 		byte[] buff = new byte[1024];
 		int cnt;
 
 		while ((cnt = fis.read(buff)) != -1)
 		{
-			bab.write(buff, 0, cnt);
+
+			baos.write(buff, 0, cnt);
 		}
-		bab.flush();
-		logger.info(bab.toString());
-		bab.close();
+		baos.flush();
+		logger.info(baos.toString());
+		baos.close();
 		fis.close();
 	}
 }
