@@ -114,7 +114,6 @@ public class BenchmarkTomcat
 				{
 					url = new URL("http://192.168.9.136:8080");
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
 					BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
 
 					baos.reset();

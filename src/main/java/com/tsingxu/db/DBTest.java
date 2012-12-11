@@ -8,7 +8,6 @@ import java.sql.Statement;
 class insert implements Runnable
 {
 
-	@Override
 	public void run()
 	{
 		Connection conn = null;
