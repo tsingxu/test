@@ -2,3 +2,5 @@
 logs
 BenchmarkAdapter.java
 target
+.classpath
+.project
