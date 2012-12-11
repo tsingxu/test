@@ -2,6 +2,7 @@ package com.tsingxu.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -20,11 +21,12 @@ class insert implements Runnable
 			conn.setAutoCommit(true);
 			Statement state = conn.createStatement();
 
-			for (int i = 0; i < 1E5; i++)
+			for (int i = 0; i < 1; i++)
 			{
-				state
-						.execute("insert into t_course (courseid,coursescore) values("
-								+ i + ", " + i + ")");
+				ResultSet result = state.executeQuery("select * from note");
+				result.beforeFirst();
+				result.next();
+				System.out.println(result.getString(2));
 			}
 
 		}
@@ -43,10 +45,6 @@ public class DBTest
 	public static void main(String[] args) throws ClassNotFoundException
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-
-		for (int i = 0; i < 1E3; i++)
-		{
-			new Thread(new insert()).start();
-		}
+		new Thread(new insert()).start();
 	}
 }
