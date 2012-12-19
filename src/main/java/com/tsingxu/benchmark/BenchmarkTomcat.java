@@ -1,10 +1,10 @@
 package com.tsingxu.benchmark;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +17,7 @@ public class BenchmarkTomcat
 	{
 		ExecutorService pool = Executors.newCachedThreadPool();
 
-		for (int i = 0; i < 1000; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			pool.execute(new Post());
 		}
@@ -30,6 +30,8 @@ public class BenchmarkTomcat
 	{
 		private HashMap<Long, AtomicLong> map = new HashMap<Long, AtomicLong>();
 		private static Statics instance = new Statics();
+		private AtomicLong sum = new AtomicLong(0);
+		private AtomicLong count = new AtomicLong(0);
 
 		private Statics()
 		{
@@ -40,9 +42,12 @@ public class BenchmarkTomcat
 			return instance;
 		}
 
-		public void update()
+		public void update(long time)
 		{
 			long key = System.currentTimeMillis() / 1000;
+
+			sum.addAndGet(time);
+			count.incrementAndGet();
 
 			synchronized (map)
 			{
@@ -56,6 +61,13 @@ public class BenchmarkTomcat
 
 		public void run()
 		{
+			long sum = 0;
+			long count = 0;
+			long max_num = -1;
+			long min_num = Long.MAX_VALUE;
+			long currentSecond;
+			long current;
+			int index = 1;
 			while (true)
 			{
 				try
@@ -66,37 +78,25 @@ public class BenchmarkTomcat
 				{
 					e.printStackTrace();
 				}
-				long sum = 0;
-				long count = 0;
-				long max_num = -1;
-				long min_num = Long.MAX_VALUE;
-				long current = 0;
-				long currentSecond = System.currentTimeMillis() / 1000;
-				long tmp;
-
-				for (Entry<Long, AtomicLong> ele : map.entrySet())
+				currentSecond = System.currentTimeMillis() / 1000;
+				AtomicLong hitCount = map.get(currentSecond);
+				if (hitCount == null)
 				{
-					if (ele.getKey() >= currentSecond)
-					{
-						continue;
-					}
-
-					tmp = ele.getValue().get();
-					if (ele.getKey() == currentSecond - 1)
-					{
-						current += tmp;
-					}
-					sum += tmp;
-					count++;
-					max_num = (max_num < tmp ? tmp : max_num);
-					min_num = (min_num > tmp ? tmp : min_num);
+					current = 0;
 				}
+				else
+				{
+					current = map.get(currentSecond).get();
+				}
+				sum += current;
+				count++;
+				max_num = (max_num < current ? current : max_num);
+				min_num = (min_num > current ? current : min_num);
 
-				System.out.println(map.size() + " " + current + " "
-						+ (count == 0 ? 0 : sum / count) + " " + min_num + " " + max_num);
-
+				System.out.println((index++) + " " + current + " " + (count == 0 ? 0 : sum / count)
+						+ " " + min_num + " " + max_num + " "
+						+ (this.sum.get() * 1.0 / this.count.get()));
 			}
-
 		}
 	}
 
@@ -107,13 +107,14 @@ public class BenchmarkTomcat
 			byte[] buff = new byte[100];
 			int count;
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
+			long time1, time2;
 			URL url;
 			while (true)
 			{
 				try
 				{
-					url = new URL("http://192.168.9.136:8080");
+					url = new URL("http://www.baidu.com");
+					time1 = System.currentTimeMillis();
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 					BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
 
@@ -123,10 +124,10 @@ public class BenchmarkTomcat
 						baos.write(buff, 0, count);
 					}
 
-					bis.close();
 					baos.flush();
-					baos.size();
-					Statics.getInstance().update();
+					// System.out.println(baos.toString());
+					time2 = System.currentTimeMillis();
+					Statics.getInstance().update(time2 - time1);
 				}
 				catch (Exception e)
 				{
@@ -135,4 +136,10 @@ public class BenchmarkTomcat
 			}
 		}
 	}
+
+	public static String getRandomCharset()
+	{
+		return "" + (char) ((int) (Math.random() * 26) + (int) 'A');
+	}
+
 }
