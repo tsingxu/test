@@ -17,27 +17,27 @@ public class BenchmarkTomcat
 	{
 		ExecutorService pool = Executors.newCachedThreadPool();
 
-		for (int i = 0; i < 1; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			pool.execute(new Post());
 		}
-		pool.execute(Statics.getInstance());
+		pool.execute(Statistics.getInstance());
 
 		pool.shutdown();
 	}
 
-	private static class Statics extends Thread
+	private static class Statistics extends Thread
 	{
 		private HashMap<Long, AtomicLong> map = new HashMap<Long, AtomicLong>();
-		private static Statics instance = new Statics();
+		private static Statistics instance = new Statistics();
 		private AtomicLong sum = new AtomicLong(0);
 		private AtomicLong count = new AtomicLong(0);
 
-		private Statics()
+		private Statistics()
 		{
 		}
 
-		public static Statics getInstance()
+		public static Statistics getInstance()
 		{
 			return instance;
 		}
@@ -113,10 +113,10 @@ public class BenchmarkTomcat
 			{
 				try
 				{
-					url = new URL("http://www.baidu.com");
+					url = new URL("http://www.baidu.com/" + getRandomString());
 					time1 = System.currentTimeMillis();
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-					conn.setRequestProperty("User-Agent", "Chrome/?.?.?");
+					conn.setRequestProperty("User-Agent", "Chrome/?.?.?" + getRandomString());
 					BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
 
 					baos.reset();
@@ -128,7 +128,7 @@ public class BenchmarkTomcat
 					baos.flush();
 					// System.out.println(baos.toString());
 					time2 = System.currentTimeMillis();
-					Statics.getInstance().update(time2 - time1);
+					Statistics.getInstance().update(time2 - time1);
 				}
 				catch (Exception e)
 				{
@@ -136,11 +136,14 @@ public class BenchmarkTomcat
 				}
 			}
 		}
-	}
 
-	public static String getRandomCharset()
-	{
-		return "" + (char) ((int) (Math.random() * 26) + (int) 'A');
+		public String getRandomString()
+		{
+			return "" + (char) (Math.random() * 26 + 'A') + (char) (Math.random() * 26 + 'A')
+					+ (char) (Math.random() * 26 + 'A') + (char) (Math.random() * 26 + 'A')
+					+ (char) (Math.random() * 26 + 'A') + (char) (Math.random() * 26 + 'A');
+		}
+
 	}
 
 }
