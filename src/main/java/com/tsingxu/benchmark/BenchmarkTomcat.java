@@ -17,7 +17,7 @@ public class BenchmarkTomcat
 	{
 		ExecutorService pool = Executors.newCachedThreadPool();
 
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < 1; i++)
 		{
 			pool.execute(new Post());
 		}
@@ -93,9 +93,9 @@ public class BenchmarkTomcat
 				max_num = (max_num < current ? current : max_num);
 				min_num = (min_num > current ? current : min_num);
 
-				System.out.println((index++) + " " + current + " " + (count == 0 ? 0 : sum / count)
-						+ " " + min_num + " " + max_num + " "
-						+ (this.sum.get() * 1.0 / this.count.get()));
+				System.out.println(String.format("%5d %5d %5d % 5d %5d     %.3f", (index++),
+						current, (count == 0 ? 0 : sum / count), min_num, max_num,
+						(this.sum.get() * 1.0 / this.count.get())));
 			}
 		}
 	}
@@ -116,6 +116,7 @@ public class BenchmarkTomcat
 					url = new URL("http://www.baidu.com");
 					time1 = System.currentTimeMillis();
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					conn.setRequestProperty("User-Agent", "Chrome/?.?.?");
 					BufferedInputStream bis = new BufferedInputStream(conn.getInputStream());
 
 					baos.reset();
