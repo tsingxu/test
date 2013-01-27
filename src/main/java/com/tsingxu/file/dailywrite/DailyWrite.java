@@ -12,14 +12,15 @@ import org.apache.log4j.Logger;
 public final class DailyWrite
 {
 	private static FileOutputStream fos;
-	private static Object fileLock = new Object();
+	private static final Object fileLock = new Object();
 	private static String shedulerFileName;
-	private static String fileName = "file/daily";
-	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	private static Logger logger = Logger.getLogger("");
+	private static final String fileName = "file/daily";
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private static final Logger logger = Logger.getLogger("");
 
 	private DailyWrite()
 	{
+		// na
 	}
 
 	public static void log(String msg)
@@ -37,26 +38,22 @@ public final class DailyWrite
 
 	private static void write(String flag) throws IOException
 	{
-		if (fos == null)
-		{
-			synchronized (fileLock)
-			{
-				if (fos == null)
-				{
-					getFile(fileName);
-				}
-			}
-		}
-
 		synchronized (fileLock)
 		{
+			getFile(fileName);
 			rollOver();
 			fos.write((new Date() + "|" + flag + System.getProperty("line.separator")).getBytes());
 		}
 	}
 
-	private static void getFile(String fileName) throws FileNotFoundException
+	private static void getFile(String fileName) throws IOException
 	{
+		if (fos != null)
+		{
+			fos.flush();
+			fos.close();
+		}
+
 		FileOutputStream ostream = null;
 		File file = null;
 		try
@@ -107,6 +104,7 @@ public final class DailyWrite
 
 	private static void closeFile() throws IOException
 	{
+		fos.flush();
 		fos.close();
 	}
 }
