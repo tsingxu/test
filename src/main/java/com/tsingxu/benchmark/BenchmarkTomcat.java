@@ -15,6 +15,8 @@ public class BenchmarkTomcat
 
 	public static void main(String[] args) throws Exception
 	{
+		System.out.println("ID    CUR   AVG   MIN   MAX       LAT(ms)");
+
 		ExecutorService pool = Executors.newCachedThreadPool();
 
 		for (int i = 0; i < 100; i++)
