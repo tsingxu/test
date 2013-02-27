@@ -16,7 +16,6 @@ public class BenchmarkTomcat
 	public static void main(String[] args) throws Exception
 	{
 		System.out.println("ID    CUR   AVG   MIN   MAX       LAT(ms)");
-
 		ExecutorService pool = Executors.newCachedThreadPool();
 
 		for (int i = 0; i < 100; i++)
@@ -95,7 +94,7 @@ public class BenchmarkTomcat
 				max_num = (max_num < current ? current : max_num);
 				min_num = (min_num > current ? current : min_num);
 
-				System.out.println(String.format("%5d %5d %5d % 5d %5d     %.3f", (index++),
+				System.out.println(String.format("%-5d %-5d %-5d %-5d %-5d     %.3f", (index++),
 						current, (count == 0 ? 0 : sum / count), min_num, max_num,
 						(this.sum.get() * 1.0 / this.count.get())));
 			}
