@@ -110,7 +110,7 @@
 110                     "Usage: " + HttpSnoopClient.class.getSimpleName() +
 111                     " <URL>");
 112             return;
-113         }
+113         } 
 114 
 115         URI uri = new URI(args[0]);
 116         new HttpSnoopClient(uri).run();
