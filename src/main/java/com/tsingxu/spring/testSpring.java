@@ -12,7 +12,7 @@ import org.springframework.core.io.FileSystemResource;
  * </ol>
  * 
  * @since 2012-10-15 上午10:10:22
- * @author x00199331
+ * @author xuhuiqing
  */
 @SuppressWarnings("deprecation")
 public class testSpring
