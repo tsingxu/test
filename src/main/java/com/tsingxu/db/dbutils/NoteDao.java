@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
@@ -22,8 +21,6 @@ class transaction implements Runnable
 			{
 				conn = NoteDao.run.getDataSource().getConnection();
 				conn.setAutoCommit(false);
-				NoteDao.run.query(conn, "select * from note where noteid = ? for update", 1,
-						new BeanListHandler<Object>(Object.class));
 				try
 				{
 					TimeUnit.SECONDS.sleep(100);
