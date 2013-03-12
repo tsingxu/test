@@ -23,6 +23,7 @@
 	SYN_SENT -> ESTAB -> FIN_WAIT_1 -> FIN_WAIT_2 -> TIME_WAIT -> CLOSED
 	LISTEN -> SYN_REVD -> ESTAB -> CLOSE_WAIT -> LAST_ACK -> CLOSED 
 	参考 http://pic.e800.com.cn/images/source/2012/9/1/11951_4e851.jpg
+	http://www.cnblogs.com/hnrainll/archive/2011/10/14/2212415.html
 *********************************************************************************
 4 快速排序复杂度分析：
 	1 					8			 8				|\
