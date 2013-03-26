@@ -91,7 +91,7 @@
         年轻代：-Xmn
 *********************************************************************************
 19  吞度量优先：-XX:+UseParallelOldGC
-        短停顿优先：-XX:+UseConMarkSweepGC
+        短停顿优先：-XX:+UseConcMarkSweepGC
 *********************************************************************************
 20 查看JVM状态：jstat -option vmid [<interval> [<count>]]
     -class -compiler -gc -gccause -gcutil ...
