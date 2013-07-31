@@ -1,132 +1,140 @@
-package com.tsingxu.test.benchmark;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class BenchmarkTomcat {
+public class BenchmarkHttp {
 
-	public static void main(String[] args) throws Exception {
-		System.out.println("ID    CUR   AVG   MIN   MAX       LAT(ms)");
-		ExecutorService pool = Executors.newCachedThreadPool();
+    public static void main(String[] args) throws Exception {
+        if (args.length < 2) {
+            System.out.println("BenchmarkHttp url content[thread-count]");
+            System.out.println("e.g. BenchmarkHttp http://www.baidu.com {\"name\":\"xuhuiqing\"}");
+            return;
+        }
 
-		for (int i = 0; i < 100; i++) {
-			pool.execute(new Post());
-		}
-		pool.execute(Statistics.getInstance());
+        System.out.println("ID    CURRENT AVERAGE MIN   MAX   TOTAL-TIME/ms TOTAL-COUNT LAT/ms");
+        ExecutorService pool = Executors.newCachedThreadPool();
+        int threadCount = Runtime.getRuntime().availableProcessors() * 2 + 1;
 
-		pool.shutdown();
-	}
+        if (args.length > 2) {
+            threadCount = Integer.parseInt(args[2]);
+        }
 
-	private static class Statistics extends Thread {
-		private HashMap<Long, AtomicLong> map = new HashMap<Long, AtomicLong>();
-		private static Statistics instance = new Statistics();
-		private AtomicLong sum = new AtomicLong(0);
-		private AtomicLong count = new AtomicLong(0);
+        Thread statisticsThread = new Thread(Statistics.getInstance());
+        statisticsThread.setDaemon(true);
+        statisticsThread.start();
 
-		private Statistics() {
-		}
+        for (int i = 0; i < threadCount; i++) {
+            pool.execute(new Post(args[0], args[1]));
+        }
 
-		public static Statistics getInstance() {
-			return instance;
-		}
+        pool.shutdown();
+    }
 
-		public void update(long time) {
-			long key = System.currentTimeMillis() / 1000;
+    private static class Statistics extends Thread {
+        private static Statistics instance = new Statistics();
+        private AtomicLong sum = new AtomicLong(0);
+        private AtomicLong count = new AtomicLong(0);
 
-			sum.addAndGet(time);
-			count.incrementAndGet();
+        private Statistics() {
+        }
 
-			synchronized (map) {
-				if (map.get(key) == null) {
-					map.put(key, new AtomicLong(0));
-				}
-			}
-			map.get(key).incrementAndGet();
-		}
+        public static Statistics getInstance() {
+            return instance;
+        }
 
-		public void run() {
-			long sum = 0;
-			long count = 0;
-			long max_num = -1;
-			long min_num = Long.MAX_VALUE;
-			long currentSecond;
-			long current;
-			int index = 1;
-			while (true) {
-				try {
-					TimeUnit.SECONDS.sleep(1);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				currentSecond = System.currentTimeMillis() / 1000;
-				AtomicLong hitCount = map.get(currentSecond);
-				if (hitCount == null) {
-					current = 0;
-				} else {
-					current = map.get(currentSecond).get();
-				}
-				sum += current;
-				count++;
-				max_num = (max_num < current ? current : max_num);
-				min_num = (min_num > current ? current : min_num);
+        public void update(long time) {
+            sum.addAndGet(time);
+            count.incrementAndGet();
+        }
 
-				System.out.println(String.format(
-						"%-5d %-5d %-5d %-5d %-5d     %.3f", (index++),
-						current, (count == 0 ? 0 : sum / count), min_num,
-						max_num, (this.sum.get() * 1.0 / this.count.get())));
-			}
-		}
-	}
+        public void run() {
+            Thread.currentThread().setName("statistics thread");
 
-	private static class Post extends Thread {
-		public void run() {
-			byte[] buff = new byte[100];
-			int count;
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			long time1, time2;
-			URL url;
-			while (true) {
-				try {
-					url = new URL("http://www.baidu.com/" + getRandomString());
-					time1 = System.currentTimeMillis();
-					HttpURLConnection conn = (HttpURLConnection) url
-							.openConnection();
-					conn.setRequestProperty("User-Agent", "Chrome/?.?.?"
-							+ getRandomString());
-					BufferedInputStream bis = new BufferedInputStream(
-							conn.getInputStream());
+            long max_num = -1, precount = 0, current = 0, index = 1, sum, count, avg, min_num = Long.MAX_VALUE;
+            double time;
 
-					baos.reset();
-					while ((count = bis.read(buff)) != -1) {
-						baos.write(buff, 0, count);
-					}
+            while (true) {
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-					baos.flush();
-					// System.out.println(baos.toString());
-					time2 = System.currentTimeMillis();
-					Statistics.getInstance().update(time2 - time1);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
+                sum = this.sum.get();
+                count = this.count.get();
+                current = count - precount;
+                max_num = current > max_num ? current : max_num;
+                min_num = current < min_num ? current : min_num;
+                avg = count / index;
+                time = count != 0 ? sum / count : -1L;
 
-		public String getRandomString() {
-			return "" + (char) (Math.random() * 26 + 'A')
-					+ (char) (Math.random() * 26 + 'A')
-					+ (char) (Math.random() * 26 + 'A')
-					+ (char) (Math.random() * 26 + 'A')
-					+ (char) (Math.random() * 26 + 'A')
-					+ (char) (Math.random() * 26 + 'A');
-		}
+                System.out.println(String.format(
+                        "%-5d %-7d %-7d %-5d %-5d %-13d %-11d %.3f", (index++),
+                        current, avg, min_num,
+                        max_num, sum, count, time));
+                precount = count;
+            }
+        }
+    }
 
-	}
+    private static class Post extends Thread {
+        private final String url;
+        private final String content;
+
+        public Post(String url, String content) {
+            this.url = url;
+            this.content = content;
+        }
+
+        public void run() {
+            Thread.currentThread().setName("POST-" + url);
+            byte[] buff = new byte[10240];
+            long time1, time2;
+
+            while (true) {
+                try {
+                    time1 = System.currentTimeMillis();
+                    URL httpUrl = new URL(url);
+                    HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
+                    connection.setRequestMethod("POST");
+                    connection.setDoOutput(true);
+                    connection.connect();
+                    final OutputStream os = connection.getOutputStream();
+                    final InputStream is = connection.getInputStream();
+
+                    os.write(content.getBytes());
+                    os.flush();
+
+                    while (true) {
+                        int cnt = is.read(buff);
+                        if (cnt == -1) {
+                            break;
+                        }
+//                        System.out.println(new String(buff, 0, cnt));
+                    }
+                    time2 = System.currentTimeMillis();
+                    Statistics.getInstance().update(time2 - time1);
+                } catch (Exception e) {
+                    System.out.println("error, " + e);
+                    break;
+                }
+            }
+
+        }
+
+        public static String getRandomString() {
+            return "" + (char) (Math.random() * 26 + 'A')
+                    + (char) (Math.random() * 26 + 'A')
+                    + (char) (Math.random() * 26 + 'A')
+                    + (char) (Math.random() * 26 + 'A')
+                    + (char) (Math.random() * 26 + 'A')
+                    + (char) (Math.random() * 26 + 'A');
+        }
+    }
 
 }
