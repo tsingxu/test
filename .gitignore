@@ -5,4 +5,4 @@ target
 .classpath
 .project
 .settings
-/src/main/java/com/tsingxu/test.java
+test.iml

@@ -11,13 +11,13 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.0.8</version>
+			<version>5.1.25</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty</artifactId>
-			<version>3.5.11.Final</version>
+			<version>3.5.13.Final</version>
 			<scope>compile</scope>
 		</dependency>
 
