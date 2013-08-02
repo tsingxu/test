@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.zip.GZIPInputStream;
 
 public class BenchmarkHttpPOST {
     static int threadCount = Runtime.getRuntime().availableProcessors() * 2 + 1;
@@ -19,6 +20,8 @@ public class BenchmarkHttpPOST {
             return;
         }
 
+        System.out.println(args[0] + "," + args[1] + "," + threadCount);
+        System.out.println();
         System.out.println("ID    CURRENT CURRENT-LAT/ms AVERAGE MIN   MAX   TOTAL-TIME/ms TOTAL-COUNT TOTAL-LAT/ms");
         ExecutorService pool = Executors.newCachedThreadPool();
 
@@ -105,13 +108,16 @@ public class BenchmarkHttpPOST {
                     URL httpUrl = new URL(url);
                     HttpURLConnection connection = (HttpURLConnection) httpUrl.openConnection();
                     connection.setRequestMethod("POST");
+                    connection.setRequestProperty("Accept-Encoding", "gzip");
                     connection.setDoOutput(true);
                     connection.connect();
                     final OutputStream os = connection.getOutputStream();
                     os.write(content.getBytes());
 
+                    boolean isGzip = "gzip".equalsIgnoreCase(connection.getHeaderField("Content-Encoding"));
+                    final InputStream is = isGzip ?
+                            new GZIPInputStream(connection.getInputStream()) : connection.getInputStream();
 
-                    final InputStream is = connection.getInputStream();
                     while (true) {
                         int cnt = is.read(buff);
                         if (cnt == -1) {

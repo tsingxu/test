@@ -5,4 +5,4 @@ target
 .classpath
 .project
 .settings
-test.iml
+*.iml
