@@ -101,7 +101,8 @@ public class BenchmarkHttpPOST {
             Thread.currentThread().setName("POST-" + url);
             long time1, time2;
             byte[] buff = new byte[10240];
-
+            final byte[] source = content.getBytes();
+            
             while (true) {
                 try {
                     time1 = System.currentTimeMillis();
@@ -112,7 +113,7 @@ public class BenchmarkHttpPOST {
                     connection.setDoOutput(true);
                     connection.connect();
                     final OutputStream os = connection.getOutputStream();
-                    os.write(content.getBytes());
+                    os.write(source);
 
                     boolean isGzip = "gzip".equalsIgnoreCase(connection.getHeaderField("Content-Encoding"));
                     final InputStream is = isGzip ?
