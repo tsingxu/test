@@ -20,14 +20,15 @@ public class BenchmarkHttpPOST {
             return;
         }
 
-        System.out.println(args[0] + "," + args[1] + "," + threadCount);
+        if (args.length > 2) {
+            threadCount = Integer.parseInt(args[2]);
+        }
+
+        System.out.println(args[0] + "\n" + args[1] + "\n" + threadCount);
         System.out.println();
         System.out.println("ID    CURRENT CURRENT-LAT/ms AVERAGE MIN   MAX   TOTAL-TIME/ms TOTAL-COUNT TOTAL-LAT/ms");
         ExecutorService pool = Executors.newCachedThreadPool();
 
-        if (args.length > 2) {
-            threadCount = Integer.parseInt(args[2]);
-        }
 
         Thread statisticsThread = new Thread(Statistics.getInstance());
         statisticsThread.setDaemon(true);
@@ -102,7 +103,7 @@ public class BenchmarkHttpPOST {
             long time1, time2;
             byte[] buff = new byte[10240];
             final byte[] source = content.getBytes();
-            
+
             while (true) {
                 try {
                     time1 = System.currentTimeMillis();
