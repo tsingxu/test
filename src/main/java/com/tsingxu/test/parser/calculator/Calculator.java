@@ -108,7 +108,7 @@ public class Calculator {
 
     private static double visitUnit(CalculatorParser.UnitContext unit, Map<String, Double> var) throws Exception {
         if (unit.getChildCount() == 3) {
-            return visitUnit((CalculatorParser.UnitContext) unit.getChild(1), var);
+            return visitCal((CalculatorParser.CalContext) unit.getChild(1), var);
         }
 
         final String text = unit.getChild(0).getText();

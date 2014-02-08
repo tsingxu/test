@@ -334,8 +334,8 @@ public class CalculatorParser extends Parser {
 	}
 
 	public static class UnitContext extends ParserRuleContext {
-		public UnitContext unit() {
-			return getRuleContext(UnitContext.class,0);
+		public CalContext cal() {
+			return getRuleContext(CalContext.class,0);
 		}
 		public TerminalNode NAME() { return getToken(CalculatorParser.NAME, 0); }
 		public TerminalNode NUMBER() { return getToken(CalculatorParser.NUMBER, 0); }
@@ -367,7 +367,7 @@ public class CalculatorParser extends Parser {
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(58); match(2);
-				setState(59); unit();
+				setState(59); cal();
 				setState(60); match(1);
 				}
 				break;
@@ -402,8 +402,8 @@ public class CalculatorParser extends Parser {
 		"\2\2,.\5\f\7\2-+\3\2\2\2.\61\3\2\2\2/-\3\2\2\2/\60\3\2\2\2\60\13\3\2\2"+
 		"\2\61/\3\2\2\2\62\67\5\16\b\2\63\64\7\n\2\2\64\66\5\16\b\2\65\63\3\2\2"+
 		"\2\669\3\2\2\2\67\65\3\2\2\2\678\3\2\2\28\r\3\2\2\29\67\3\2\2\2:A\7\13"+
-		"\2\2;A\7\6\2\2<=\7\4\2\2=>\5\16\b\2>?\7\3\2\2?A\3\2\2\2@:\3\2\2\2@;\3"+
-		"\2\2\2@<\3\2\2\2A\17\3\2\2\2\b\22\37\'/\67@";
+		"\2\2;A\7\6\2\2<=\7\4\2\2=>\5\6\4\2>?\7\3\2\2?A\3\2\2\2@:\3\2\2\2@;\3\2"+
+		"\2\2@<\3\2\2\2A\17\3\2\2\2\b\22\37\'/\67@";
 	public static final ATN _ATN =
 		ATNSimulator.deserialize(_serializedATN.toCharArray());
 	static {
