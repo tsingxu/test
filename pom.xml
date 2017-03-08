@@ -72,8 +72,8 @@
         </dependency>
         <dependency>
             <groupId>org.antlr</groupId>
-            <artifactId>antlr</artifactId>
-            <version>4.1-complete</version>
+            <artifactId>antlr4-runtime</artifactId>
+            <version>4.2-complete</version>
         </dependency>
     </dependencies>
 </project>
